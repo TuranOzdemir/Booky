@@ -4,6 +4,7 @@
 
 {% block content %}
 </br>
+{% if user.is_authenticated %}
 <div class="col-md-12">
     <div class="card">
         <div class="card-header text-center" style="font-size: larger;">
@@ -25,7 +26,7 @@
                 <div class="card-body">
                   <h5 class="card-title">{{ b.title }}</h5>
                   <p class="card-text"> {{ b.description| truncatechars:150 }} </p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                  <a href=" {% url "book_detail" b.id %} " class="btn btn-primary">Go somewhere</a>
                 </div>
               </div>
             {% endfor %}
@@ -34,4 +35,25 @@
         <p>Welcome, guest!</p>
     {% endif %}
 </div>
+
+{% else %}
+
+<div class = "col-md-6 offset-md-3 ">
+  <h1 class = "text-center">Login</h1>
+  </br>
+  <form method="POST" action="{% url 'home' %}">
+      {% csrf_token %}
+      <form>
+          <div class="mb-3">
+            <input type="text" class="form-control" name = "user_name" placeholder = "User Name" required>
+          <div class="mb-3">
+              </br>
+            <input type="password" class="form-control" name = "password" placeholder = "Password" required>
+          </div>
+          <button type="submit" class="btn btn-secondary">Login</button>
+      </form>
+  </form>
+
+{% endif %}
+
 {% endblock content %}

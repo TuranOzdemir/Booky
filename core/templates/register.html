@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock title %}
+
+{% block content %}
+
+<div class = "col-md-6 offset-md-3 ">
+    <h1 class = "text-center">Register</h1>
+    </br>
+    <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="alert alert-warning
+            alert-dismissible fade show" role="alert">
+                Your Form has errors
+                {% for field in form %}
+                    {% if field.errors %}
+                        <p>{{ field.label }}: {{ field.errors }}</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form>
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-secondary">Register</button>
+        </form>
+    </form>
+{% endblock content %}

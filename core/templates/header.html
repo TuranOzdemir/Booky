@@ -16,11 +16,11 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link active text-danger" href="#">Logout</a>
+                <a class="nav-link active text-danger" href=" {% url "logout" %} ">Logout</a>
             </li>
             {% else %}
             <li class="nav-item">
-                <a class="nav-link active text-primary " href="#">Register</a>
+                <a class="nav-link active text-primary " href=" {% url 'register' %} ">Register</a>
             </li>
             <li></li>
             <li class="nav-item">

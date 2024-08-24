@@ -61,6 +61,8 @@
                           Comments
                         </a>
                     </p>
+
+{% comment %} I need to fix this Part when I click the button all the collapses are oppenning also the reviews need another review model {% endcomment %}
                     <div class="collapse" id="collapseExample">
                         <div class="card">
                             <div class="card-header">
@@ -73,7 +75,9 @@
                                 <p>{{ review.created_at }}</p>
                                 <h5 class="card-text">{{ review.review_text }}</h5>
                         </div>
-                      </div>                      
+                      </div>   
+                      
+                      {% comment %} end {% endcomment %}
                 </form>
                 
             </div>

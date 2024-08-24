@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Review
 from django import forms
         
 class SignUpForm(UserCreationForm):
@@ -26,4 +27,30 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].widget.attrs['placeholder'] = 'Confirm Password'
         self.fields['password2'].label = ''
         self.fields['password2'].help_text = '<span class="form-text text-muted">Enter the same password as before, for verification.</span>'
+
+
+class ReviewForm(forms.ModelForm):
+    review_text = forms.CharField(label='', widget=forms.Textarea(attrs={'class': 'form-control'}))
+    book_rating = forms.IntegerField(label='', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Rating'}))
+
+    class Meta:
+        model = Review
+        fields = ['review_text', 'book_rating']
         
+
+    def __init__(self, *args, **kwargs):
+        super(ReviewForm, self).__init__(*args, **kwargs)
+        self.fields['review_text'].widget.attrs['rows'] = 4
+        self.fields['review_text'].label = ''
+        self.fields['review_text'].widget.attrs['placeholder'] = 'Write your review here...'
+        self.fields['review_text'].widget.attrs['class'] = 'form-control'
+        
+        self.fields['review_text'].help_text = '<span class="form-text text-muted">Write your review here...</span>'
+
+        self.fields['book_rating'].widget.attrs['placeholder'] = 'Rating'
+        self.fields['book_rating'].widget.attrs['class'] = 'form-control'
+        self.fields['book_rating'].widget.attrs['min'] = 1
+        self.fields['book_rating'].widget.attrs['max'] = 5
+        self.fields['book_rating'].label = ''
+        
+    

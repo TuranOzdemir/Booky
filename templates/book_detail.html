@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Book Page{% endblock title %}
+
+{% block content %}
+</br>
+<div class="row">
+<div class="col-md-4">
+    <image src="{% static book.cover_image.url %}" class="card-img-top">
+    </div>
+    <div class="col-md-8">
+        <h1>{{ book.title }}</h1>
+        <p>{{ book.description }}</p>
+        <p>Author: {{ book.author }}</p>
+        <p>Publication Year: {{ book.publication_year }}</p>
+        <p>Publisher: {{ book.publisher }}</p>
+        <p>Genre: {{ book.genre }}</p>
+        <p>Avarage Rating:<i data-star = "{{ book.average_rating }}" ></i></p>
+        <p>Number of Ratings: {{ book.number_of_ratings }}</p>
+        <p>ISBN: {{ book.isbn }}</p>
+        <p>Created At : {{ book.created_at }} </p>
+    </div>
+</div>  
+</br>
+
+<!-- existing Reviews:-->
+<div class="row">
+    <div class="col-md-12">
+        <h3>Reviews</h3>
+    </br>
+    <ul>
+        {% for review in reviews %}
+        <div class="card">
+            <div class="card-header">
+                <a class="nav-link active text-primary d-flex align-items-center" href="#">
+                    <img src="{% static 'profile_pictures/default_profile_picture.jpg' %}" class="card-img-top" style="width: 40px; height: 40px; margin-right: 10px;">
+                    <h4 class="mb-0">{{ review.user }}</h4>
+                </a>
+            </div>
+            
+            <div class="card-body">
+            <p>{{ review.created_at }}</p>
+            <h5 class="card-text">{{ review.review_text }}</h5>
+            <div class = "display-stars">
+                <p class="fa fa-star {% if review.book_rating >= 1 %}checked{% endif %} star"></p>
+                <p class="fa fa-star {% if review.book_rating >= 2 %}checked{% endif %} star"></p>
+                <p class="fa fa-star {% if review.book_rating >= 3 %}checked{% endif %} star"></p>
+                <p class="fa fa-star {% if review.book_rating >= 4 %}checked{% endif %} star"></p>
+                <p class="fa fa-star {% if review.book_rating >= 5 %}checked{% endif %} star"></p>
+            </div>
+        
+            <div class="card-footer">
+                <form method="POST" action="{% url 'add_review_like' pk=review.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn {% if review.user_liked %}btn-primary{% else %}btn-secondary{% endif %}">
+                        {{ review.likes_count }} 
+                        <i class="bi {% if review.user_liked %}bi-hand-thumbs-up-fill{% else %}bi-hand-thumbs-up{% endif %}"></i>
+                    </button>
+                    <p class="d-inline-flex gap-1">
+                        <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                          Comments
+                        </a>
+                    </p>
+                    <div class="collapse" id="collapseExample">
+                        <div class="card">
+                            <div class="card-header">
+                                <a class="nav-link active text-primary d-flex align-items-center" href="#">
+                                    <img src="{% static 'profile_pictures/default_profile_picture.jpg' %}" class="card-img-top" style="width: 40px; height: 40px; margin-right: 10px;">
+                                    <h4 class="mb-0">{{ request.user }}</h4>
+                                </a>                                
+                            </div>
+                            <div class="card-body">
+                                <p>{{ review.created_at }}</p>
+                                <h5 class="card-text">{{ review.review_text }}</h5>
+                        </div>
+                      </div>                      
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</br>
+{% endfor %}
+<div class="card">
+    <div class="card-header">
+        <a class="nav-link active text-primary d-flex align-items-center" href="#">
+            <img src="{% static 'profile_pictures/default_profile_picture.jpg' %}" class="card-img-top" style="width: 40px; height: 40px; margin-right: 10px;">
+            <h4 class="mb-0">{{ request.user }}</h4>
+        </a>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{% url 'add_review' book_id=book.id %}">
+          {% csrf_token %}
+          <textarea name="review_text" class="form-control" rows="4" placeholder="Write your review here..."></textarea>
+          <br>
+          <div class="rating">
+            <input type="hidden" name="book_rating" id="book_rating">
+            <i class="fa fa-star star" data-value="1"></i>
+            <i class="fa fa-star star" data-value="2"></i>
+            <i class="fa fa-star star" data-value="3"></i>
+            <i class="fa fa-star star" data-value="4"></i>  
+      
+            <i class="fa fa-star star" data-value="5"></i>
+          </div>  
+      
+          <br>
+          <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+      </div>
+</div>
+    </ul>
+</div>
+
+{% endblock content %}

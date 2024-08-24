@@ -7,18 +7,30 @@
 {% if user.is_authenticated %}
 <div class="col-md-12">
     <div class="card">
-        <div class="card-header text-center" style="font-size: larger;">
-            New Book Review
-        </div>
         <div class="card-body">
-          <h5 class="card-title">This card will ad a new book review (in the future!)</h5>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
+          <form class="d-flex" role="search" method="POST" action="{% url 'search' %}">
+            {% csrf_token %}
+            <input class="form-control me-2" type="search" name="query" placeholder="Search for books...">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
         </div>
       </div>
 </div>
 </br>
 <div class="row">
-    {% if user.is_authenticated %}
+    {% if results %}
+              {% for result in results %}
+                  <div class="card" style="width: 18rem;">
+                    <image src="{% static result.cover_image.url %}" class="card-img-top">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ result.title }}</h5>
+                      <p class="card-text"> {{ result.description| truncatechars:150 }} </p>
+                      <a href=" {% url "book_detail" result.id %} " class="btn btn-primary">Go somewhere</a>
+                    </div>
+                  </div>
+              {% endfor %}
+  </div>
+    {% else %}
         {% if books %}
             {% for b in books %}
             <div class="card" style="width: 18rem;">
@@ -30,11 +42,14 @@
                 </div>
               </div>
             {% endfor %}
+        {% else %}
+            <h1 class = "text-center">No Books Found</h1>
+
         {% endif %}
-    {% else %}
-        <p>Welcome, guest!</p>
     {% endif %}
+    
 </div>
+
 
 {% else %}
 

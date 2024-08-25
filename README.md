@@ -64,10 +64,6 @@ To run the project locally, follow these steps:
 
 This project is still in development. Contributions, suggestions, and feedback are welcome. If you'd like to contribute, please fork the repository, make your changes, and submit a pull request.
 
-## License
-
-Booky is open-source software licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
 ---
 
 Feel free to modify this as your project evolves!

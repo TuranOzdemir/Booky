@@ -24,11 +24,22 @@ class Review(models.Model):
     review_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     number_of_likes = models.IntegerField(default=0)
+    number_of_comments = models.IntegerField(default=0)
     book_rating = models.IntegerField(choices=[(i, i) for i in range(6)], default=0)
     #likes = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.user.username} Reviewed {self.book.title}"
+    
+class Review_comments(models.Model):
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='review_comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment_text = models.TextField()
+    number_of_likes = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} commented on {self.review.user.username}'s review on {self.review.book.title}"
 
 class Review_likes(models.Model):
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='review_likes')

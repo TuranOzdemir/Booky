@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Review
+from .models import Review, Review_comments
 from django import forms
         
 class SignUpForm(UserCreationForm):
@@ -53,4 +53,20 @@ class ReviewForm(forms.ModelForm):
         self.fields['book_rating'].widget.attrs['max'] = 5
         self.fields['book_rating'].label = ''
         
+class ReviewCommentForm (forms.ModelForm):
+    comment_text = forms.CharField(label='', widget=forms.Textarea(attrs={'class': 'form-control'}))
+    
+    class Meta:
+        model = Review_comments
+        fields = ['comment_text']
+        
+    def __init__(self, *args, **kwargs):
+        super(ReviewCommentForm, self).__init__(*args, **kwargs)
+        self.fields['comment_text'].widget.attrs['rows'] = 4
+        self.fields['comment_text'].label = ''
+        self.fields['comment_text'].widget.attrs['placeholder'] = 'Write your comment here...'
+        self.fields['comment_text'].widget.attrs['class'] = 'form-control'
+        
+        self.fields['comment_text'].help_text = '<span class="form-text text-muted">Write your comment here...</span>'
+    
     

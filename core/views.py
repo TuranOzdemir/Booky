@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import Book, Review, Review_likes
-from .forms import SignUpForm, ReviewForm
+from .models import Book, Review, Review_likes, Review_comments
+from .forms import SignUpForm, ReviewForm, ReviewCommentForm
 
 def home(request):
     books = Book.objects.all()
@@ -53,6 +53,7 @@ def book_detail(request, book_id):
     book.average_rating = round(sum([review.book_rating for review in reviews]) / len(reviews) if reviews else 0, 3)
     book.number_of_ratings = len(reviews)
     
+    
     for review in reviews:
         review.likes_count = review.review_likes.all().count()
         review.user_liked = review.review_likes.filter(user=request.user)
@@ -85,17 +86,39 @@ def add_review_like(request, pk):
     return redirect('book_detail', book_id=review.book.id)
 
 def add_review(request, book_id):
-    book = get_object_or_404(Book, id=book_id)
+    book = get_object_or_404(Book, id=book_id) 
+    book.number_of_ratings = Review.objects.filter(book=book).count()
+    book.average_rating = round(sum([review.book_rating for review in Review.objects.filter(book=book)]) / book.number_of_ratings if book.number_of_ratings else 0, 3)
+    book.save()
     if request.method == 'POST':
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.book = book
-            review.user = request.user
-            review.save()
-            messages.success(request, 'Your review has been added!') 
-            book.number_of_ratings += 1
-            return redirect('book_detail', book_id=book.id)
+        if Review.objects.filter(book=book, user=request.user).exists():
+            messages.error(request, 'You have already reviewed this book.')
         else:
-            messages.error(request, 'Please correct the errors below.')
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                review = form.save(commit=False)
+                review.book = book
+                review.user = request.user
+                review.save()
+                messages.success(request, 'Your review has been added!') 
+            else:
+                messages.error(request, 'Please correct the errors below.')
+
+        
     return redirect('book_detail', book_id=book.id)
+
+def add_review_comment(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    review.number_of_comments = Review_comments.objects.filter(review=review).count()
+    review.save()
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            form = ReviewCommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.review = review
+                comment.user = request.user
+                comment.save()
+                messages.success(request, 'Your comment has been added!')
+            else:
+                messages.error(request, 'Please correct the errors below.')

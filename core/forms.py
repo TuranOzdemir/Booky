@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Review, Review_comments
+from .models import Review, ReviewComment
 from django import forms
         
 class SignUpForm(UserCreationForm):
@@ -57,7 +57,7 @@ class ReviewCommentForm (forms.ModelForm):
     comment_text = forms.CharField(label='', widget=forms.Textarea(attrs={'class': 'form-control'}))
     
     class Meta:
-        model = Review_comments
+        model = ReviewComment
         fields = ['comment_text']
         
     def __init__(self, *args, **kwargs):

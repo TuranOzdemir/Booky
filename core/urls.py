@@ -12,6 +12,7 @@ urlpatterns = [
     path('add_review_like/<int:pk>/', views.add_review_like, name='add_review_like'),
     path('add_review/<int:book_id>/', views.add_review, name='add_review'),
     path('add_review_comment/<int:review_id>/', views.add_review_comment, name='add_review_comment'),
+    path('add_review_comment_like/<int:pk>/', views.add_review_comment_like, name='add_review_comment_like'),
 
 ]
 

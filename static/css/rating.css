@@ -26,7 +26,7 @@
   
   .rating {
     .star {
-        font-size: 1.5em;
+        font-size: 1,5em;
         color: gray;
         cursor: pointer;
     }
@@ -36,7 +36,7 @@
   }
   .display-stars {
     .star {
-        font-size: 1.5em;
+        font: size 8px;;
         color: gray;
     }
     .star.checked {
